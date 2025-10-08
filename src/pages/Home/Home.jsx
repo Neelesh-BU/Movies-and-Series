@@ -53,7 +53,9 @@ const Home = () => {
             </div>
           ))
         ) : (
-          <p className="no-data">Please wait while we fetch the data...</p>
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
         )}
       </div>
     </div>
