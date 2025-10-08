@@ -10,7 +10,6 @@ const Home = () => {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    console.log("Fetching movies...");
     const fetchMovies = async () => {
       const result = await getMovies();
       if (result.success) {
