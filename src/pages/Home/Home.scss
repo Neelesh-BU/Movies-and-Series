@@ -71,4 +71,82 @@
     font-size: 1rem;
     color: #555;
   }
+
+  /* ============ Responsive Styles ============ */
+
+  /* Large tablets and small laptops */
+  @media (max-width: 1200px) {
+    .movie-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+  }
+
+  /* Tablets */
+  @media (max-width: 992px) {
+    .movie-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .movie-card {
+      width: 180px;
+
+      .movie-poster {
+        height: 230px;
+      }
+    }
+  }
+
+  /* Large phones */
+  @media (max-width: 768px) {
+    .home-title {
+      font-size: 1.6rem;
+    }
+
+    .movie-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .movie-card {
+      width: 160px;
+
+      .movie-poster {
+        height: 220px;
+      }
+
+      .movie-info {
+        .movie-title {
+          font-size: 0.9rem;
+        }
+
+        .watch-btn {
+          font-size: 0.8rem;
+          padding: 6px 0;
+        }
+      }
+    }
+  }
+
+  /* Small phones */
+  @media (max-width: 480px) {
+    .home-title {
+      font-size: 1.4rem;
+    }
+
+    .movie-grid {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 20px;
+    }
+
+    .movie-card {
+      width: 80%;
+      max-width: 280px;
+
+      .movie-poster {
+        height: 200px;
+      }
+    }
+  }
 }
