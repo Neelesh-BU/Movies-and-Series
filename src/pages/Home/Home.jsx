@@ -19,10 +19,14 @@ const Home = () => {
       }
     };
 
+    // Call once immediately
     fetchMovies();
 
-    const hasReload = localStorage.getItem("autoReloadDone");
+    // Then call every 30 seconds
+    const interval = setInterval(fetchMovies, 30000);
 
+    // Loader logic (same as before)
+    const hasReload = localStorage.getItem("autoReloadDone");
     const checkLoaderTimeout = setTimeout(() => {
       if (movies.length === 0 && !hasReload) {
         showSnackbar("Please wait for Loading...");
@@ -33,42 +37,63 @@ const Home = () => {
       }
     }, 5000);
 
-    return () => clearTimeout(checkLoaderTimeout);
+    // Cleanup on unmount
+    return () => {
+      clearInterval(interval);
+      clearTimeout(checkLoaderTimeout);
+    };
   }, []);
+
+  const groupMoviesByLanguageAndType = (movies) => {
+    const grouped = {};
+
+    movies.forEach((movie) => {
+      const key = `${movie.language} - ${movie.type}`;
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(movie);
+    });
+
+    return grouped;
+  };
+
+  const groupedMovies = groupMoviesByLanguageAndType(movies);
 
   return (
     <div className="home">
-      <h2 className="home-title">Featured Movies & Series</h2>
-
-      <div className="movie-grid">
-        {movies.length > 0 ? (
-          movies.map((movie) => (
-            <div className="movie-card" key={movie.id}>
-              <img
-                src={`/Images/Posters/${movie.title}.jpg`}
-                alt={movie.title}
-                className="movie-poster"
-                onError={(e) => (e.target.src = "/images/placeholder.jpg")}
-              />
-
-              <div className="movie-info">
-                <h3 className="movie-title">{movie.title}</h3>
-
-                <button
-                  className="watch-btn"
-                  onClick={() => window.open(movie.downloadLink, "_blank")}
-                >
-                  Download
-                </button>
+      {/* Language Sections */}
+      {Object.entries(groupedMovies).map(([langType, movies]) => (
+        <div key={langType} className="language-section">
+          <h2 className="home-title">{langType}</h2>
+          <div className="movie-grid">
+            {movies.map((movie) => (
+              <div className="movie-card" key={movie.id}>
+                <img
+                  src={`/Images/Posters/${movie.title}.jpg`}
+                  alt={movie.title}
+                  className="movie-poster"
+                  onError={(e) => (e.target.src = "/images/placeholder.jpg")}
+                />
+                <div className="movie-info">
+                  <h3 className="movie-title">{movie.title}</h3>
+                  <button
+                    className="watch-btn"
+                    onClick={() => window.open(movie.downloadLink, "_blank")}
+                  >
+                    Download
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <div className="loader-container">
-            <div className="loader"></div>
+            ))}
           </div>
-        )}
-      </div>
+        </div>
+      ))}
+
+      {/* Loader */}
+      {movies.length === 0 && (
+        <div className="loader-container">
+          <div className="loader"></div>
+        </div>
+      )}
     </div>
   );
 };
