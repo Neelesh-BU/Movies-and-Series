@@ -15,14 +15,25 @@ const Home = () => {
       if (result.success) {
         setMovies(result.data.data);
       } else {
-        showSnackbar(
-          "Fetching Movies & Series",
-          result.message || "Failed to fetch movies"
-        );
+        showSnackbar("Please wait for Loading...");
       }
     };
 
     fetchMovies();
+
+    const hasReload = localStorage.getItem("autoReloadDone");
+
+    const checkLoaderTimeout = setTimeout(() => {
+      if (movies.length === 0 && !hasReload) {
+        showSnackbar("Please wait for Loading...");
+        setTimeout(() => {
+          localStorage.setItem("autoReloadDone", "true");
+          window.location.reload();
+        }, 10000);
+      }
+    }, 5000);
+
+    return () => clearTimeout(checkLoaderTimeout);
   }, []);
 
   return (
