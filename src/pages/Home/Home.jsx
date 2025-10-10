@@ -23,7 +23,7 @@ const Home = () => {
     fetchMovies();
 
     // Then call every 30 seconds
-    const interval = setInterval(fetchMovies, 30000);
+    const interval = setInterval(fetchMovies, 20000);
 
     // Loader logic (same as before)
     const hasReload = localStorage.getItem("autoReloadDone");
