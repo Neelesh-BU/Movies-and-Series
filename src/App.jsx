@@ -1,7 +1,4 @@
-// import { Routes, Route } from "react-router-dom";
-// import Home from "./pages/Home/Home";
 import { SnackbarAndLoaderProvider } from "./components/Snackbar/SnackbarAndLoaderProvider.jsx";
-// import UploadPage from "./pages/Upload/UploadPage";
 import "./App.css";
 import ThemeProvider from "./theme/index.jsx";
 
@@ -15,8 +12,10 @@ function App() {
       <SnackbarAndLoaderProvider>
         <div className="App">
           <Navbar />
-          <MainContent />
-          <Footer />
+          <div className="page-wrapper">
+            <MainContent />
+            <Footer />
+          </div>
         </div>
       </SnackbarAndLoaderProvider>
     </ThemeProvider>

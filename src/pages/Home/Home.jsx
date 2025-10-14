@@ -1,98 +1,103 @@
 import "./Home.scss";
 import { useEffect, useState } from "react";
 import { useSnackbarAndLoader } from "../../components/Snackbar/SnackbarAndLoaderProvider.jsx";
-
 import { getMovies } from "../../api/services/movieService";
 
 const Home = () => {
   const { showSnackbar } = useSnackbarAndLoader();
-
-  const [movies, setMovies] = useState([]);
+  const [moviesGrouped, setMoviesGrouped] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMovies = async () => {
-      const result = await getMovies();
-      if (result.success) {
-        setMovies(result.data.data);
-      } else {
-        showSnackbar("Please wait for Loading...");
+      setLoading(true);
+      try {
+        const response = await getMovies();
+        const moviesData =
+          response?.data?.data ||
+          response?.data?.movies ||
+          response?.data ||
+          response;
+
+        if (moviesData && Array.isArray(moviesData)) {
+          // Group by language + type combination
+          const grouped = moviesData.reduce((acc, movie) => {
+            const langs = Array.isArray(movie.languages)
+              ? movie.languages
+              : [movie.language || "Unknown"];
+            const type = movie.type || "Unknown";
+
+            langs.forEach((lang) => {
+              const key = `${lang} - ${type}`;
+              if (!acc[key]) acc[key] = [];
+              acc[key].push(movie);
+            });
+
+            return acc;
+          }, {});
+          setMoviesGrouped(grouped);
+        } else {
+          showSnackbar("No movies found", "warning");
+        }
+      } catch (error) {
+        console.error("❌ Error fetching movies:", error);
+        showSnackbar("Failed to load movies", "error");
+      } finally {
+        setLoading(false);
       }
     };
 
-    // Call once immediately
     fetchMovies();
+  }, [showSnackbar]);
 
-    // Then call every 30 seconds
-    const interval = setInterval(fetchMovies, 20000);
-
-    // Loader logic (same as before)
-    const hasReload = localStorage.getItem("autoReloadDone");
-    const checkLoaderTimeout = setTimeout(() => {
-      if (movies.length === 0 && !hasReload) {
-        showSnackbar("Please wait for Loading...");
-        setTimeout(() => {
-          localStorage.setItem("autoReloadDone", "true");
-          window.location.reload();
-        }, 10000);
-      }
-    }, 5000);
-
-    // Cleanup on unmount
-    return () => {
-      clearInterval(interval);
-      clearTimeout(checkLoaderTimeout);
-    };
-  }, []);
-
-  const groupMoviesByLanguageAndType = (movies) => {
-    const grouped = {};
-
-    movies.forEach((movie) => {
-      const key = `${movie.language} - ${movie.type}`;
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(movie);
-    });
-
-    return grouped;
-  };
-
-  const groupedMovies = groupMoviesByLanguageAndType(movies);
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <div className="loader"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="home">
-      {/* Language Sections */}
-      {Object.entries(groupedMovies).map(([langType, movies]) => (
-        <div key={langType} className="language-section">
-          <h2 className="home-title">{langType}</h2>
-          <div className="movie-grid">
-            {movies.map((movie) => (
-              <div className="movie-card" key={movie.id}>
-                <img
-                  src={`/Images/Posters/${movie.title}.jpg`}
-                  alt={movie.title}
-                  className="movie-poster"
-                  onError={(e) => (e.target.src = "/images/placeholder.jpg")}
-                />
-                <div className="movie-info">
-                  <h3 className="movie-title">{movie.title}</h3>
-                  <button
-                    className="watch-btn"
-                    onClick={() => window.open(movie.downloadLink, "_blank")}
-                  >
-                    Download
-                  </button>
-                </div>
+      {Object.keys(moviesGrouped).length === 0 ? (
+        <p>No movies found</p>
+      ) : (
+        Object.keys(moviesGrouped)
+          .sort((a, b) => a.localeCompare(b))
+          .map((group) => (
+            <div key={group} className="language-section">
+              <h2 className="home-title">{group}</h2>
+              <div className="movie-grid">
+                {moviesGrouped[group]
+                  .slice()
+                  .sort((a, b) => a.title.localeCompare(b.title))
+                  .map((movie) => (
+                    <div key={movie.id} className="movie-card">
+                      <img
+                        src={`/Images/Posters/${movie.title}.jpg`}
+                        alt={movie.title}
+                        className="movie-poster"
+                        onError={(e) =>
+                          (e.target.src = "/images/placeholder.jpg")
+                        }
+                      />
+                      <div className="movie-info">
+                        <div className="movie-title">{movie.title}</div>
+                        <button
+                          className="watch-btn"
+                          onClick={() =>
+                            window.open(movie.downloadLink, "_blank")
+                          }
+                        >
+                          Download
+                        </button>
+                      </div>
+                    </div>
+                  ))}
               </div>
-            ))}
-          </div>
-        </div>
-      ))}
-
-      {/* Loader */}
-      {movies.length === 0 && (
-        <div className="loader-container">
-          <div className="loader"></div>
-        </div>
+            </div>
+          ))
       )}
     </div>
   );
