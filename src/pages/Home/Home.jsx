@@ -1,5 +1,5 @@
 import "./Home.scss";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSnackbarAndLoader } from "../../components/Snackbar/SnackbarAndLoaderProvider.jsx";
 import { getMovies } from "../../api/services/movieService";
 
@@ -7,11 +7,12 @@ const Home = () => {
   const { showSnackbar } = useSnackbarAndLoader();
   const [moviesGrouped, setMoviesGrouped] = useState({});
   const [loading, setLoading] = useState(true);
+  const retryTimeoutRef = useRef(null); // To clear retry timer on unmount
 
   useEffect(() => {
     const fetchMovies = async () => {
-      setLoading(true);
       try {
+        setLoading(true);
         const response = await getMovies();
         const moviesData =
           response?.data?.data ||
@@ -20,7 +21,6 @@ const Home = () => {
           response;
 
         if (moviesData && Array.isArray(moviesData)) {
-          // Group by language + type combination
           const grouped = moviesData.reduce((acc, movie) => {
             const langs = Array.isArray(movie.languages)
               ? movie.languages
@@ -36,18 +36,33 @@ const Home = () => {
             return acc;
           }, {});
           setMoviesGrouped(grouped);
+          showSnackbar("Hi!! friend👋, Enjoy your visit!", "success")
+          setLoading(false); // ✅ Stop loader when success
         } else {
-          showSnackbar("No movies found", "warning");
+          showSnackbar("Loading", "success");
+          retryFetch(); // ✅ Retry if empty data
         }
       } catch (error) {
         console.error("❌ Error fetching movies:", error);
-        showSnackbar("Failed to load movies", "error");
-      } finally {
-        setLoading(false);
+        showSnackbar("Loading...", "success");
+        retryFetch(); // ✅ Retry on API failure
       }
     };
 
+    const retryFetch = () => {
+      retryTimeoutRef.current = setTimeout(() => {
+        fetchMovies();
+      }, 2000); // Retry after 2 sec
+    };
+
     fetchMovies();
+
+    // Cleanup timeout on component unmount
+    return () => {
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+      }
+    };
   }, [showSnackbar]);
 
   if (loading) {
@@ -61,7 +76,9 @@ const Home = () => {
   return (
     <div className="home">
       {Object.keys(moviesGrouped).length === 0 ? (
-        <p>No movies found</p>
+        <div className="loader-container">
+          <div className="loader"></div>
+        </div>
       ) : (
         Object.keys(moviesGrouped)
           .sort((a, b) => a.localeCompare(b))
