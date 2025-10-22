@@ -2,19 +2,12 @@ import api from "../index";
 import { ENDPOINTS } from "../endpoints";
 import { handleApiError } from "../handleError";
 
-/**
- * Fetch movies with optional pagination
- * @param {number} page - page number (default 1)
- * @param {number} limit - number of items per page (default 20)
- */
-export const getMovies = async (page = 1, limit = 20) => {
+export const getMovies = async () => {
   try {
-    const response = await api.get(ENDPOINTS.MOVIES.LIST, {
-      params: { page, limit }, // send pagination params
-    });
+    const response = await api.get(ENDPOINTS.MOVIES.LIST);
     return {
       success: true,
-      data: response.data,
+      data: response.data,  
     };
   } catch (error) {
     return handleApiError(error);

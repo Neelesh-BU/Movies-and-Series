@@ -1,12 +1,23 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "../pages/Home/Home";
+import { Suspense, lazy } from "react";
+
+// Lazy import Home
+const Home = lazy(() => import("../pages/Home/Home"));
 
 function MainContent() {
   return (
     <main className="App-content">
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
+      <Suspense
+        fallback={
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
+        }
+      >
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </Suspense>
     </main>
   );
 }

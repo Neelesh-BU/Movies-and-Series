@@ -2,12 +2,14 @@ import "./Home.scss";
 import { useEffect, useState, useRef } from "react";
 import { useSnackbarAndLoader } from "../../components/Snackbar/SnackbarAndLoaderProvider.jsx";
 import { getMovies } from "../../api/services/movieService";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const Home = () => {
   const { showSnackbar } = useSnackbarAndLoader();
   const [moviesGrouped, setMoviesGrouped] = useState({});
   const [loading, setLoading] = useState(true);
-  const retryTimeoutRef = useRef(null); // To clear retry timer on unmount
+  const retryTimeoutRef = useRef(null);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -35,29 +37,29 @@ const Home = () => {
 
             return acc;
           }, {});
+
           setMoviesGrouped(grouped);
-          showSnackbar("Hi!! friend👋, Enjoy your visit!", "success")
-          setLoading(false); // ✅ Stop loader when success
+          showSnackbar("Hi!! friend👋, Enjoy your visit!", "success");
+          setLoading(false);
         } else {
           showSnackbar("Loading Please Wait...", "success");
-          retryFetch(); // ✅ Retry if empty data
+          retryFetch();
         }
       } catch (error) {
         console.error("❌ Error fetching movies:", error);
         showSnackbar("Loading Please Wait...", "success");
-        retryFetch(); // ✅ Retry on API failure
+        retryFetch();
       }
     };
 
     const retryFetch = () => {
       retryTimeoutRef.current = setTimeout(() => {
         fetchMovies();
-      }, 2000); // Retry after 2 sec
+      }, 2000);
     };
 
     fetchMovies();
 
-    // Cleanup timeout on component unmount
     return () => {
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current);
@@ -91,13 +93,12 @@ const Home = () => {
                   .sort((a, b) => a.title.localeCompare(b.title))
                   .map((movie) => (
                     <div key={movie.id} className="movie-card">
-                      <img
-                        src={`/Images/Posters/${movie.title}.jpg`}
+                      <LazyLoadImage
                         alt={movie.title}
+                        src={`/Images/Posters/${movie.title}.jpg`}
+                        effect="blur"
                         className="movie-poster"
-                        onError={(e) =>
-                          (e.target.src = "/images/placeholder.jpg")
-                        }
+                        onError={(e) => (e.target.src = "/images/placeholder.jpg")}
                       />
                       <div className="movie-info">
                         <div className="movie-title">{movie.title}</div>
