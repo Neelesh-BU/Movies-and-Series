@@ -39,12 +39,12 @@ const Home = () => {
           showSnackbar("Hi!! friend👋, Enjoy your visit!", "success")
           setLoading(false); // ✅ Stop loader when success
         } else {
-          showSnackbar("Loading", "success");
+          showSnackbar("Loading Please Wait...", "success");
           retryFetch(); // ✅ Retry if empty data
         }
       } catch (error) {
         console.error("❌ Error fetching movies:", error);
-        showSnackbar("Loading...", "success");
+        showSnackbar("Loading Please Wait...", "success");
         retryFetch(); // ✅ Retry on API failure
       }
     };
