@@ -7,13 +7,7 @@ const Home = lazy(() => import("../pages/Home/Home"));
 function MainContent() {
   return (
     <main className="App-content">
-      <Suspense
-        fallback={
-          <div className="loader-container">
-            <div className="loader"></div>
-          </div>
-        }
-      >
+      <Suspense>
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>

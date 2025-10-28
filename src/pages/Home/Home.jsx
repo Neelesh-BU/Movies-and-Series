@@ -36,7 +36,7 @@ const Home = () => {
 
           setMoviesGrouped(grouped);
           showSnackbar("Hi!! friend👋, Enjoy your visit!", "success");
-          setLoading(false);
+          // setLoading(false);
         } else {
           showSnackbar("Loading Please Wait...", "success");
           retryFetch();
@@ -45,6 +45,8 @@ const Home = () => {
         console.error("❌ Error fetching movies:", error);
         showSnackbar("Loading Please Wait...", "success");
         retryFetch();
+      } finally {
+        setTimeout(() => setLoading(false), 800);
       }
     };
 
@@ -65,8 +67,10 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div className="loader-container">
-        <div className="loader"></div>
+      <div className="home">
+        <div className="loader-container">
+          <div className="loader"></div>
+        </div>
       </div>
     );
   }
@@ -94,7 +98,9 @@ const Home = () => {
                         src={`/Images/Posters/${movie.title}.jpg`}
                         effect="blur"
                         className="movie-poster"
-                        onError={(e) => (e.target.src = "/images/placeholder.jpg")}
+                        onError={(e) =>
+                          (e.target.src = "/images/placeholder.jpg")
+                        }
                       />
                       <div className="movie-info">
                         <div className="movie-title">{movie.title}</div>
