@@ -16,18 +16,14 @@ const Home = () => {
       try {
         setLoading(true);
         const response = await getMovies();
-        const moviesData =
-          response?.data?.data ||
-          response?.data?.movies ||
-          response?.data ||
-          response;
+        const moviesData = response?.data?.data;
 
         if (moviesData && Array.isArray(moviesData)) {
           const grouped = moviesData.reduce((acc, movie) => {
             const langs = Array.isArray(movie.languages)
               ? movie.languages
               : [movie.language || "Unknown"];
-            const type = movie.type || "Unknown";
+            const type = movie.category || "Unknown";
 
             langs.forEach((lang) => {
               const key = `${lang} - ${type}`;
