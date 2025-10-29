@@ -1,7 +1,7 @@
 export const ENDPOINTS = {
   MOVIES: {
     LIST: "/movies",
-    DETAILS: (id) => `/movies/${id}`,
+    TRENDING: "/trending",
   },
   AUTH: {
     LOGIN: "/auth/login",

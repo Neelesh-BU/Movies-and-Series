@@ -1,4 +1,5 @@
 import "./Home.scss";
+import Trending from "../Trending/Trending.jsx";
 import { useEffect, useState, useRef } from "react";
 import { useSnackbarAndLoader } from "../../components/Snackbar/SnackbarAndLoaderProvider.jsx";
 import { getMovies } from "../../api/services/movieService";
@@ -77,6 +78,8 @@ const Home = () => {
 
   return (
     <div className="home">
+      <Trending />
+      <br />
       {Object.keys(moviesGrouped).length === 0 ? (
         <div className="loader-container">
           <div className="loader"></div>

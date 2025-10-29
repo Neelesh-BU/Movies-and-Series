@@ -1,0 +1,423 @@
+.trending-heading {
+  margin-left: 50px;
+  font-size: 26px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.5px;
+  border-left: 5px solid #e50914;
+  padding-left: 10px;
+  margin-bottom: 20px;
+}
+
+.trending-section {
+  position: relative;
+  width: 100%;
+  padding-left: 4vw;
+  height: 80vh;
+  overflow: hidden;
+
+  .trending-bg {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    transition: background-image 0.4s ease-in-out;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-in-out;
+
+    &.fade-in {
+      animation-name: fadeInSlide;
+    }
+
+    &.fade-out {
+      animation-name: fadeOutSlide;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.85),
+        rgba(0, 0, 0, 0.2)
+      );
+      z-index: 1;
+    }
+
+    .trending-content {
+      position: relative;
+      color: white;
+      padding: 4rem;
+      z-index: 2;
+      max-width: 50%;
+
+      .trending-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
+      }
+
+      .buttons {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        .trending-watch-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          background-color: #e50914;
+          color: #fff;
+          border: none;
+          padding: 10px 18px;
+          border-radius: 6px;
+          font-size: 16px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.3s ease, transform 0.2s ease;
+
+          svg {
+            font-size: 20px;
+          }
+
+          &:hover {
+            background-color: #b20710;
+            transform: scale(1.05);
+          }
+
+          &:active {
+            transform: scale(0.97);
+          }
+        }
+      }
+
+      .desc {
+        font-size: 1rem;
+        opacity: 0.85;
+      }
+
+      .rating {
+        display: inline-block;
+        margin-top: 0.8rem;
+        background-color: rgba(255, 255, 255, 0.15);
+        padding: 0.4rem 0.8rem;
+        border-radius: 5px;
+        font-size: 0.9rem;
+      }
+    }
+
+    .desc {
+      font-size: 1rem;
+      opacity: 0.85;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      transition: all 0.3s ease;
+
+      &.expanded {
+        -webkit-line-clamp: unset;
+        line-clamp: unset;
+        overflow: visible;
+      }
+    }
+
+    .read-more-btn {
+      background: transparent;
+      padding: 0.2rem 0.4rem;
+      border: 3px solid #e50914;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+      margin-top: 0.3rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 3;
+      background: rgba(0, 0, 0, 0.3);
+      transition: background 0.3s, transform 0.2s;
+
+      &:hover {
+        background: #b20710;
+        color: #fff;
+      }
+      &.left {
+        left: 1.5rem;
+      }
+
+      &.right {
+        right: 1.5rem;
+      }
+    }
+  }
+}
+
+/* Animations */
+@keyframes fadeInSlide {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOutSlide {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+/* ---------------------- LOADER ---------------------- */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+
+  .loader {
+    border: 5px solid rgba(255, 255, 255, 0.2);
+    border-top: 5px solid #e50914;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+/* ---------------- Responsive Breakpoints ---------------- */
+
+/* Tablets (≤1200px) */
+@media (max-width: 1200px) {
+  .trending-section {
+    height: 70vh;
+
+    .trending-bg .trending-content {
+      padding: 3rem;
+      max-width: 60%;
+
+      .trending-title {
+        font-size: 2.5rem;
+      }
+    }
+  }
+}
+
+/* Medium devices (≤992px) */
+@media (max-width: 992px) {
+  .trending-section {
+    height: 65vh;
+
+    .trending-bg {
+      align-items: flex-end;
+
+      .trending-content {
+        max-width: 100%;
+        padding: 2.5rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .trending-title {
+          font-size: 2rem;
+          margin-bottom: 1rem;
+        }
+
+        .buttons {
+          justify-content: center;
+
+          .trending-watch-btn {
+            font-size: 15px;
+            padding: 8px 16px;
+
+            svg {
+              font-size: 18px;
+            }
+          }
+        }
+
+        .desc {
+          font-size: 0.95rem;
+        }
+      }
+
+      .nav-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 1.3rem;
+
+        &.left {
+          left: 1rem;
+        }
+
+        &.right {
+          right: 1rem;
+        }
+      }
+    }
+  }
+}
+
+/* Small tablets & large phones (≤768px) */
+@media (max-width: 768px) {
+  .desc,
+  .read-more-btn {
+    display: none !important;
+  }
+
+  .trending-heading {
+    margin-left: 10px;
+    font-size: 20px;
+  }
+
+  .trending-section {
+    height: 60vh;
+
+    .trending-bg {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      text-align: center;
+
+      .trending-content {
+        width: 100%;
+        padding: 0 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        text-align: center;
+
+        .trending-title {
+          font-size: 1.8rem;
+          margin: 0;
+          text-align: center;
+          word-wrap: break-word;
+          width: 100%;
+        }
+
+        .buttons {
+          display: flex;
+          justify-content: center;
+          width: 100%;
+
+          .trending-watch-btn {
+            font-size: 14px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background-color: #e50914;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+              background-color: #e50914;
+            }
+
+            svg {
+              font-size: 18px;
+            }
+          }
+        }
+      }
+
+      .nav-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &.left {
+          left: 1rem;
+        }
+
+        &.right {
+          right: 1rem;
+        }
+      }
+    }
+  }
+}
+
+/* Phones (≤576px) */
+@media (max-width: 576px) {
+  .trending-section {
+    height: 55vh;
+
+    .trending-bg .trending-content {
+      padding: 1.5rem;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+
+      .trending-title {
+        font-size: 1.5rem;
+      }
+
+      .desc {
+        font-size: 0.85rem;
+      }
+
+      .buttons {
+        justify-content: center;
+      }
+    }
+
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+  }
+}

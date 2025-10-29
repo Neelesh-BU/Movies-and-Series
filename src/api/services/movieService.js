@@ -14,9 +14,9 @@ export const getMovies = async () => {
   }
 };
 
-export const getMovieById = async (id) => {
+export const getTrendingMovies = async () => {
   try {
-    const response = await api.get(ENDPOINTS.MOVIES.DETAILS(id));
+    const response = await api.get(ENDPOINTS.MOVIES.TRENDING);
     return {
       success: true,
       data: response.data,
