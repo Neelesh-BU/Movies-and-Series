@@ -117,7 +117,7 @@ function Trending() {
 
   return (
     <div>
-      <h2 className="trending-heading">Trending</h2>
+      <h2 className="trending-heading">Recent Upload</h2>
       <section className="trending-section">
         <div
           className={`trending-bg ${fade ? "fade-out" : "fade-in"}`}
